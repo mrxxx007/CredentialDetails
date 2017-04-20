@@ -1,4 +1,4 @@
-package FolderDifference;
+package CredentialDetails;
 
 import junit.framework.Test;
 import junit.framework.TestCase;

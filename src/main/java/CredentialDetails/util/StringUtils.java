@@ -1,4 +1,4 @@
-package FolderDifference.util;
+package CredentialDetails.util;
 
 /**
  * Created by Admin on 25.09.2016.

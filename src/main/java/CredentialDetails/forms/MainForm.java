@@ -1,10 +1,11 @@
-package FolderDifference.forms;
+package CredentialDetails.forms;
 
 
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 
 /**
@@ -13,7 +14,7 @@ import java.awt.*;
 public class MainForm extends JFrame {
 
     private JPanel mainPanel;
-    private JTable table1;
+    private JTable mainTable;
     private JList list1;
 
 
@@ -28,6 +29,10 @@ public class MainForm extends JFrame {
 //        openButton1.addActionListener(controller);
 //        openButton2.addActionListener(controller);
 //        analyseButton.addActionListener(controller);
+        final String[] mainTableHeaders = {"Name", "URL", "Username", "Password", "Comments"};
+        DefaultTableModel defaultTableModel = new DefaultTableModel();
+        defaultTableModel.setColumnIdentifiers(mainTableHeaders);
+        mainTable.setModel(defaultTableModel);
     }
 
     public static void main(String[] args) {
