@@ -78,6 +78,12 @@
                   <text value="Load"/>
                 </properties>
               </component>
+              <component id="2f928" class="javax.swing.JButton" binding="saveButton" default-binding="true">
+                <constraints/>
+                <properties>
+                  <text value="Save"/>
+                </properties>
+              </component>
               <component id="dc8b9" class="javax.swing.JToolBar$Separator">
                 <constraints/>
                 <properties/>

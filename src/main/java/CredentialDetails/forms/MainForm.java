@@ -2,7 +2,9 @@ package CredentialDetails.forms;
 
 
 import CredentialDetails.app.Application;
-import CredentialDetails.controller.LoadButtonController;
+import CredentialDetails.controller.FileOperationButtonController;
+import CredentialDetails.data.ApplicationModel;
+import CredentialDetails.view.MainFormRender;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 
@@ -14,6 +16,8 @@ import java.awt.*;
  */
 public class MainForm extends JFrame {
 
+    private ApplicationModel model;
+
     private JPanel mainPanel;
     private JTable mainTable;
     private JList sectionsList;
@@ -21,10 +25,23 @@ public class MainForm extends JFrame {
     private JButton deleteRowButton;
     private JButton searchButton;
     private JButton loadButton;
+    private JButton saveButton;
 
-
+    /**
+     * Constructor
+     */
     public MainForm() {
-        loadButton.addActionListener(new LoadButtonController());
+        model = new ApplicationModel(new MainFormRender(this));
+
+        FileOperationButtonController fileOperationButtonController = new FileOperationButtonController();
+        loadButton.addActionListener(fileOperationButtonController);
+        saveButton.addActionListener(fileOperationButtonController);
+    }
+
+    // Components' getters
+
+    public ApplicationModel getModel() {
+        return model;
     }
 
     public JList getSectionsList() {
@@ -35,6 +52,19 @@ public class MainForm extends JFrame {
         return mainTable;
     }
 
+    public JButton getLoadButton() {
+        return loadButton;
+    }
+
+    public JButton getSaveButton() {
+        return saveButton;
+    }
+
+    /**
+     * Application starting point
+     *
+     * @param args arguments
+     */
     public static void main(String[] args) {
         SwingUtilities.invokeLater(new Application());
     }
@@ -82,6 +112,7 @@ public class MainForm extends JFrame {
         defaultListModel1.addElement("123");
         defaultListModel1.addElement("345");
         sectionsList.setModel(defaultListModel1);
+        sectionsList.setSelectionMode(0);
         scrollPane2.setViewportView(sectionsList);
         final JToolBar toolBar1 = new JToolBar();
         toolBar1.setFloatable(false);
@@ -89,6 +120,9 @@ public class MainForm extends JFrame {
         loadButton = new JButton();
         loadButton.setText("Load");
         toolBar1.add(loadButton);
+        saveButton = new JButton();
+        saveButton.setText("Save");
+        toolBar1.add(saveButton);
         final JToolBar.Separator toolBar$Separator1 = new JToolBar.Separator();
         toolBar1.add(toolBar$Separator1);
         addRowButton = new JButton();
