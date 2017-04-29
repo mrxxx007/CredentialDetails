@@ -1,8 +1,9 @@
 package CredentialDetails.forms;
 
 
+import CredentialDetails.app.ActionCommand;
 import CredentialDetails.app.Application;
-import CredentialDetails.controller.FileOperationButtonController;
+import CredentialDetails.controller.FileOperationController;
 import CredentialDetails.data.ApplicationModel;
 import CredentialDetails.view.MainFormRender;
 import com.intellij.uiDesigner.core.GridConstraints;
@@ -33,9 +34,11 @@ public class MainForm extends JFrame {
     public MainForm() {
         model = new ApplicationModel(new MainFormRender(this));
 
-        FileOperationButtonController fileOperationButtonController = new FileOperationButtonController();
-        loadButton.addActionListener(fileOperationButtonController);
-        saveButton.addActionListener(fileOperationButtonController);
+        FileOperationController fileOperationController = new FileOperationController();
+        loadButton.setActionCommand(ActionCommand.OPEN_FILE.name());
+        loadButton.addActionListener(fileOperationController);
+        saveButton.setActionCommand(ActionCommand.SAVE_FILE.name());
+        saveButton.addActionListener(fileOperationController);
     }
 
     // Components' getters
@@ -93,13 +96,13 @@ public class MainForm extends JFrame {
      */
     private void $$$setupUI$$$() {
         mainPanel = new JPanel();
-        mainPanel.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
+        mainPanel.setLayout(new GridLayoutManager(2, 1, new Insets(0, 0, 0, 0), -1, -1));
         mainPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5), null));
         final JPanel panel1 = new JPanel();
-        panel1.setLayout(new GridLayoutManager(2, 1, new Insets(0, 0, 0, 0), -1, -1));
-        mainPanel.add(panel1, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        panel1.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
+        mainPanel.add(panel1, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         final JSplitPane splitPane1 = new JSplitPane();
-        panel1.add(splitPane1, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, new Dimension(200, 200), null, 0, false));
+        panel1.add(splitPane1, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, new Dimension(200, 200), null, 0, false));
         splitPane1.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), null));
         final JScrollPane scrollPane1 = new JScrollPane();
         splitPane1.setRightComponent(scrollPane1);
@@ -116,7 +119,7 @@ public class MainForm extends JFrame {
         scrollPane2.setViewportView(sectionsList);
         final JToolBar toolBar1 = new JToolBar();
         toolBar1.setFloatable(false);
-        panel1.add(toolBar1, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(-1, 20), null, 0, false));
+        mainPanel.add(toolBar1, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(-1, 20), null, 0, false));
         loadButton = new JButton();
         loadButton.setText("Load");
         toolBar1.add(loadButton);

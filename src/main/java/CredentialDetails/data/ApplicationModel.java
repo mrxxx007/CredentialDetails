@@ -11,8 +11,14 @@ import java.util.Map;
  */
 public class ApplicationModel {
     private MainFormRender render;
-    private Map<String, Collection<TableContentVo>> tableData = Collections.emptyMap();
 
+    private Map<String, Collection<TableContentVo>> tableData = Collections.emptyMap();
+    private String activeSection;
+
+    /**
+     * Constructor
+     * @param render A render class for the model
+     */
     public ApplicationModel(MainFormRender render) {
         this.render = render;
     }
@@ -23,6 +29,14 @@ public class ApplicationModel {
     public void refreshAll() {
         render.renderSectionsList(tableData.keySet());
         render.renderTable(tableData.get("Internet"));
+    }
+
+    public String getActiveSection() {
+        return activeSection;
+    }
+
+    public void setActiveSection(String activeSection) {
+        this.activeSection = activeSection;
     }
 
     public Map<String, Collection<TableContentVo>> getTableData() {
