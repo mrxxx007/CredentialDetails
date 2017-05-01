@@ -1,10 +1,12 @@
 package CredentialDetails.app;
 
+import CredentialDetails.controller.DataController;
 import CredentialDetails.controller.FileOperationController;
 import CredentialDetails.forms.MainForm;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionListener;
 
 /**
  * Application startup class with single instance of a Main Frame
@@ -60,12 +62,7 @@ public class Application implements Runnable {
         fileMenu.addSeparator();
         fileMenu.add(exitMenuItem);
 
-        FileOperationController fileOperationController = new FileOperationController();
-        for (Component component : fileMenu.getMenuComponents()) {
-            if (component instanceof JMenuItem) {
-                ((JMenuItem) component).addActionListener(fileOperationController);
-            }
-        }
+        setActionListenerForAllItems(fileMenu, new FileOperationController());
 
         // Sections menu
         JMenu sectionsMenu = new JMenu("Sections");
@@ -78,10 +75,13 @@ public class Application implements Runnable {
         // Credentials menu
         JMenu credentialsMenu = new JMenu("Credentials");
         JMenuItem addCredentialItem = new JMenuItem("Add new");
+        addCredentialItem.setActionCommand(ActionCommand.NEW_CREDENTIAL.name());
         JMenuItem removeCredentialItem = new JMenuItem("Remove selected");
+        removeCredentialItem.setActionCommand(ActionCommand.REMOVE_CREDENTIAL.name());
 
-        sectionsMenu.add(addCredentialItem);
-        sectionsMenu.add(removeCredentialItem);
+        credentialsMenu.add(addCredentialItem);
+        credentialsMenu.add(removeCredentialItem);
+        setActionListenerForAllItems(credentialsMenu, new DataController());
 
 
         menuBar.add(fileMenu);
@@ -89,5 +89,13 @@ public class Application implements Runnable {
         menuBar.add(credentialsMenu);
 
         return menuBar;
+    }
+
+    private void setActionListenerForAllItems(JMenu menu, ActionListener listener) {
+        for (Component component : menu.getMenuComponents()) {
+            if (component instanceof JMenuItem) {
+                ((JMenuItem) component).addActionListener(listener);
+            }
+        }
     }
 }

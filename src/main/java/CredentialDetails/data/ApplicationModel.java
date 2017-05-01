@@ -13,7 +13,7 @@ public class ApplicationModel {
     private MainFormRender render;
 
     private Map<String, Collection<TableContentVo>> tableData = Collections.emptyMap();
-    private String activeSection;
+    private String activeSection = "";
 
     /**
      * Constructor
@@ -28,7 +28,7 @@ public class ApplicationModel {
      */
     public void refreshAll() {
         render.renderSectionsList(tableData.keySet());
-        render.renderTable(tableData.get("Internet"));
+        render.renderTable(tableData.get(activeSection));
     }
 
     public String getActiveSection() {
@@ -37,6 +37,8 @@ public class ApplicationModel {
 
     public void setActiveSection(String activeSection) {
         this.activeSection = activeSection;
+
+        render.renderTable(tableData.get(activeSection));
     }
 
     public Map<String, Collection<TableContentVo>> getTableData() {

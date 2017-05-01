@@ -18,21 +18,24 @@
         <properties/>
         <border type="none"/>
         <children>
-          <splitpane id="c2911">
+          <splitpane id="c2911" binding="mainSplitPane">
             <constraints>
-              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false">
-                <preferred-size width="200" height="200"/>
+              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false">
+                <preferred-size width="700" height="300"/>
               </grid>
             </constraints>
-            <properties/>
+            <properties>
+              <continuousLayout value="true"/>
+              <dividerLocation value="100"/>
+            </properties>
             <border type="etched"/>
             <children>
-              <scrollpane id="1f3db">
+              <scrollpane id="1f3db" binding="credentialsScrollPane">
                 <constraints>
                   <splitpane position="right"/>
                 </constraints>
                 <properties/>
-                <border type="none"/>
+                <border type="none" title="Credentials data" title-position="1"/>
                 <children>
                   <component id="61f8c" class="javax.swing.JTable" binding="mainTable">
                     <constraints/>
@@ -40,22 +43,27 @@
                   </component>
                 </children>
               </scrollpane>
-              <scrollpane id="c0368">
+              <scrollpane id="c0368" binding="sectionsScrollPane">
                 <constraints>
                   <splitpane position="left"/>
                 </constraints>
                 <properties/>
-                <border type="none"/>
+                <border type="none" title="Sections" title-position="1"/>
                 <children>
                   <component id="181de" class="javax.swing.JList" binding="sectionsList">
                     <constraints/>
                     <properties>
+                      <dropMode value="USE_SELECTION"/>
+                      <layoutOrientation value="0"/>
                       <model>
                         <item value="123"/>
                         <item value="345"/>
                       </model>
                       <selectionMode value="0"/>
                     </properties>
+                    <clientProperties>
+                      <List.isFileList class="java.lang.Boolean" value="false"/>
+                    </clientProperties>
                   </component>
                 </children>
               </scrollpane>

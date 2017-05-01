@@ -20,16 +20,19 @@ public class MainFormRender {
     }
 
     public void renderTable(Collection<TableContentVo> tableData) {
-        DefaultTableModel tableModel = (DefaultTableModel) mainForm.getMainTable().getModel();
-        tableModel.setColumnIdentifiers(TableContentVo.TABLE_COLUMNS);
+        if (tableData != null) {
+            DefaultTableModel tableModel = (DefaultTableModel) mainForm.getMainTable().getModel();
+            tableModel.setColumnIdentifiers(TableContentVo.TABLE_COLUMNS);
+            tableModel.setRowCount(0);
 
-        for (TableContentVo data : tableData) {
-            tableModel.addRow(new Object[] {
-                    data.getTitle(),
-                    data.getUrl(),
-                    data.getLogin(),
-                    data.getPassword(),
-                    data.getComment() });
+            for (TableContentVo data : tableData) {
+                tableModel.addRow(new Object[]{
+                        data.getTitle(),
+                        data.getUrl(),
+                        data.getLogin(),
+                        data.getPassword(),
+                        data.getComment()});
+            }
         }
     }
 }

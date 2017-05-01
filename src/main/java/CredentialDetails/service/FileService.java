@@ -62,6 +62,20 @@ public class FileService {
         voList.add(vo2);
 
         data.put("Internet", voList);
+
+        //////
+        List<TableContentVo> gamesList = new ArrayList<>();
+        TableContentVo vo3 = new TableContentVo();
+        vo3.setTitle("World of Warcraft");
+        vo3.setUrl("www.wow-circle.com");
+        vo3.setLogin("wow-login");
+        vo3.setPassword("wow-passw");
+        vo3.setComment("Private wow server");
+
+        gamesList.add(vo3);
+
+        data.put("Games", gamesList);
+
         return data;
     }
 }

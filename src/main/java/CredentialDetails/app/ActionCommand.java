@@ -8,6 +8,10 @@ public enum ActionCommand {
     OPEN_FILE,
     SAVE_FILE,
     EXIT,
+
+    NEW_CREDENTIAL,
+    REMOVE_CREDENTIAL,
+
     UNKNOWN;
 
     public static ActionCommand fromString(String value) {

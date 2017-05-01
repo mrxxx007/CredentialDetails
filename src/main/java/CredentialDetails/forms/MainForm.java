@@ -4,12 +4,14 @@ package CredentialDetails.forms;
 import CredentialDetails.app.ActionCommand;
 import CredentialDetails.app.Application;
 import CredentialDetails.controller.FileOperationController;
+import CredentialDetails.controller.SectionsListSelectionListener;
 import CredentialDetails.data.ApplicationModel;
 import CredentialDetails.view.MainFormRender;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 
 import javax.swing.*;
+import javax.swing.border.TitledBorder;
 import java.awt.*;
 
 /**
@@ -27,6 +29,9 @@ public class MainForm extends JFrame {
     private JButton searchButton;
     private JButton loadButton;
     private JButton saveButton;
+    private JScrollPane sectionsScrollPane;
+    private JScrollPane credentialsScrollPane;
+    private JSplitPane mainSplitPane;
 
     /**
      * Constructor
@@ -39,6 +44,8 @@ public class MainForm extends JFrame {
         loadButton.addActionListener(fileOperationController);
         saveButton.setActionCommand(ActionCommand.SAVE_FILE.name());
         saveButton.addActionListener(fileOperationController);
+
+        sectionsList.addListSelectionListener(new SectionsListSelectionListener());
     }
 
     // Components' getters
@@ -61,6 +68,14 @@ public class MainForm extends JFrame {
 
     public JButton getSaveButton() {
         return saveButton;
+    }
+
+    public JScrollPane getSectionsScrollPane() {
+        return sectionsScrollPane;
+    }
+
+    public JSplitPane getMainSplitPane() {
+        return mainSplitPane;
     }
 
     /**
@@ -101,22 +116,29 @@ public class MainForm extends JFrame {
         final JPanel panel1 = new JPanel();
         panel1.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
         mainPanel.add(panel1, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
-        final JSplitPane splitPane1 = new JSplitPane();
-        panel1.add(splitPane1, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, new Dimension(200, 200), null, 0, false));
-        splitPane1.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), null));
-        final JScrollPane scrollPane1 = new JScrollPane();
-        splitPane1.setRightComponent(scrollPane1);
+        mainSplitPane = new JSplitPane();
+        mainSplitPane.setContinuousLayout(true);
+        mainSplitPane.setDividerLocation(100);
+        panel1.add(mainSplitPane, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, null, new Dimension(700, 300), null, 0, false));
+        mainSplitPane.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), null));
+        credentialsScrollPane = new JScrollPane();
+        mainSplitPane.setRightComponent(credentialsScrollPane);
+        credentialsScrollPane.setBorder(BorderFactory.createTitledBorder(null, "Credentials data", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.ABOVE_TOP));
         mainTable = new JTable();
-        scrollPane1.setViewportView(mainTable);
-        final JScrollPane scrollPane2 = new JScrollPane();
-        splitPane1.setLeftComponent(scrollPane2);
+        credentialsScrollPane.setViewportView(mainTable);
+        sectionsScrollPane = new JScrollPane();
+        mainSplitPane.setLeftComponent(sectionsScrollPane);
+        sectionsScrollPane.setBorder(BorderFactory.createTitledBorder(null, "Sections", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.ABOVE_TOP));
         sectionsList = new JList();
+        sectionsList.setDropMode(DropMode.USE_SELECTION);
+        sectionsList.setLayoutOrientation(0);
         final DefaultListModel defaultListModel1 = new DefaultListModel();
         defaultListModel1.addElement("123");
         defaultListModel1.addElement("345");
         sectionsList.setModel(defaultListModel1);
         sectionsList.setSelectionMode(0);
-        scrollPane2.setViewportView(sectionsList);
+        sectionsList.putClientProperty("List.isFileList", Boolean.FALSE);
+        sectionsScrollPane.setViewportView(sectionsList);
         final JToolBar toolBar1 = new JToolBar();
         toolBar1.setFloatable(false);
         mainPanel.add(toolBar1, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(-1, 20), null, 0, false));
