@@ -1,5 +1,9 @@
 package CredentialDetails.service;
 
+import CredentialDetails.app.Application;
+import CredentialDetails.data.ApplicationData;
+import CredentialDetails.data.ApplicationModel;
+import CredentialDetails.data.TableRowVo;
 import CredentialDetails.data.TableContentVo;
 
 import java.io.*;
@@ -11,13 +15,13 @@ import java.util.*;
 public class FileService {
     private static final String TEMP_FILE_NAME = "C:\\temp\\credentialDetails.dat";
 
-    public static Map<String, Collection<TableContentVo>> loadFromFile() {
+    public static ApplicationData loadFromFile() {
         File file = new File(TEMP_FILE_NAME);
-        Map<String, Collection<TableContentVo>> data = Collections.emptyMap();
+        ApplicationData data = null;
         if (file.exists()) {
             try (FileInputStream fileOutputStream = new FileInputStream(file)) {
                 try (ObjectInputStream input = new ObjectInputStream(fileOutputStream)) {
-                    data = (Map<String, Collection<TableContentVo>>) input.readObject();
+                    data = (ApplicationData) input.readObject();
                 } catch (ClassNotFoundException e) {
                     e.printStackTrace();
                 }
@@ -25,20 +29,91 @@ public class FileService {
                 e.printStackTrace();
             }
         } else {
-            data = getTestData();
+            data = getNewTestData();
         }
 
         return data;
     }
 
-    public static void saveToFile(Map<String, Collection<TableContentVo>> data) {
+    public static void saveApplicationDataToFile() {
+        ApplicationModel applicationModel = Application.getInstance().getModel();
+        ApplicationData applicationData = applicationModel.getApplicationData();
+        applicationData.setMaxTableId(applicationModel.getMaxTableId());
+
         try (FileOutputStream fileOutputStream = new FileOutputStream(TEMP_FILE_NAME)) {
             try (ObjectOutputStream output = new ObjectOutputStream(fileOutputStream)) {
-                output.writeObject(data);
+                output.writeObject(applicationData);
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private static ApplicationData getNewTestData() {
+        ApplicationModel applicationModel = Application.getInstance().getModel();
+
+        Map<String, Set<String>> sectionColumns = new HashMap<>();
+
+        Set<String> internetSectionColumns = new HashSet<>();
+        internetSectionColumns.add("ID");
+        internetSectionColumns.add("Title");
+        internetSectionColumns.add("URL");
+        internetSectionColumns.add("Login");
+        internetSectionColumns.add("Password");
+        internetSectionColumns.add("Comments");
+
+        Set<String> gamesSectionColumns = new HashSet<>();
+        gamesSectionColumns.add("ID");
+        gamesSectionColumns.add("Title");
+        gamesSectionColumns.add("URL");
+        gamesSectionColumns.add("Login");
+        gamesSectionColumns.add("Password");
+        gamesSectionColumns.add("Comments");
+
+        sectionColumns.put("Internet", internetSectionColumns);
+        sectionColumns.put("Games", gamesSectionColumns);
+
+        // table data
+        long id = applicationModel.getNextTableId();
+        Map<String, String> internetData1 = new HashMap<>();
+        internetData1.put("ID", Long.toString(id));
+        internetData1.put("Title", "Mail Ru");
+        internetData1.put("URL", "www.mail.ru");
+        internetData1.put("Login", "mail1");
+        internetData1.put("Password", "qwerty123");
+        internetData1.put("Comments", "Mailbox service");
+
+        TableRowVo internetRow1 = new TableRowVo();
+        internetRow1.setId(id);
+        internetRow1.setSectionName("Internet");
+        internetRow1.setData(internetData1);
+
+        //
+        id = applicationModel.getNextTableId();
+        Map<String, String> internetData2 = new HashMap<>();
+        internetData2.put("ID", Long.toString(id));
+        internetData2.put("Title", "Sberbank");
+        internetData2.put("URL", "sberbank.online.ru");
+        internetData2.put("Login", "login21");
+        internetData2.put("Password", "123456");
+        internetData2.put("Comments", "");
+
+        TableRowVo internetRow2 = new TableRowVo();
+        internetRow2.setId(id);
+        internetRow2.setSectionName("Internet");
+        internetRow2.setData(internetData2);
+
+        List<TableRowVo> internetTableData = new ArrayList<>();
+        internetTableData.add(internetRow1);
+        internetTableData.add(internetRow2);
+
+
+        ApplicationData applicationData = new ApplicationData();
+        applicationData.setSectionColumns(sectionColumns);
+        applicationData.setMaxTableId(applicationModel.getMaxTableId());
+        applicationData.getTableData().put("Internet", internetTableData);
+
+        return applicationData;
     }
 
     private static Map<String, Collection<TableContentVo>> getTestData() {

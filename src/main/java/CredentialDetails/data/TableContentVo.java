@@ -2,6 +2,10 @@ package CredentialDetails.data;
 
 import java.io.Serializable;
 
+/**
+ * @deprecated Use SectionDataVO instead
+ */
+@Deprecated
 public class TableContentVo implements Serializable {
     static final long serialVersionUID = 1L;
 
@@ -51,5 +55,29 @@ public class TableContentVo implements Serializable {
 
     public void setComment(String comment) {
         this.comment = comment;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        TableContentVo that = (TableContentVo) o;
+
+        if (title != null ? !title.equals(that.title) : that.title != null) return false;
+        if (url != null ? !url.equals(that.url) : that.url != null) return false;
+        if (login != null ? !login.equals(that.login) : that.login != null) return false;
+        if (password != null ? !password.equals(that.password) : that.password != null) return false;
+        return !(comment != null ? !comment.equals(that.comment) : that.comment != null);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = title != null ? title.hashCode() : 0;
+        result = 31 * result + (url != null ? url.hashCode() : 0);
+        result = 31 * result + (login != null ? login.hashCode() : 0);
+        result = 31 * result + (password != null ? password.hashCode() : 0);
+        result = 31 * result + (comment != null ? comment.hashCode() : 0);
+        return result;
     }
 }

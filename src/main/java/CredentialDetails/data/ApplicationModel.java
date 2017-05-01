@@ -2,9 +2,7 @@ package CredentialDetails.data;
 
 import CredentialDetails.view.MainFormRender;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Map;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * Model class for application
@@ -12,8 +10,13 @@ import java.util.Map;
 public class ApplicationModel {
     private MainFormRender render;
 
-    private Map<String, Collection<TableContentVo>> tableData = Collections.emptyMap();
+    /**
+     * Key - section name; Value - section data
+     */
+    //private Map<String, SectionDataVo> tableData = Collections.emptyMap();
     private String activeSection = "";
+    private AtomicLong maxTableId = new AtomicLong(0);
+    private ApplicationData applicationData;
 
     /**
      * Constructor
@@ -27,8 +30,33 @@ public class ApplicationModel {
      * Refresh all data on the main form
      */
     public void refreshAll() {
-        render.renderSectionsList(tableData.keySet());
-        render.renderTable(tableData.get(activeSection));
+        render.renderSectionsList(applicationData.getTableData().keySet());
+        refreshTable();
+    }
+
+    public void refreshTable() {
+        render.renderTable(applicationData.getTableData().get(activeSection));
+    }
+
+    public long getNextTableId() {
+        return this.maxTableId.incrementAndGet();
+    }
+
+    public long getMaxTableId() {
+        return this.maxTableId.get();
+    }
+
+    public void setMaxTableId(long value) {
+        this.maxTableId.set(value);
+    }
+
+
+    public ApplicationData getApplicationData() {
+        return applicationData;
+    }
+
+    public void setApplicationData(ApplicationData applicationData) {
+        this.applicationData = applicationData;
     }
 
     public String getActiveSection() {
@@ -38,14 +66,18 @@ public class ApplicationModel {
     public void setActiveSection(String activeSection) {
         this.activeSection = activeSection;
 
-        render.renderTable(tableData.get(activeSection));
+        refreshTable();
     }
 
-    public Map<String, Collection<TableContentVo>> getTableData() {
-        return tableData;
-    }
-
-    public void setTableData(Map<String, Collection<TableContentVo>> tableData) {
-        this.tableData = tableData;
+    public void appendTableDataForActiveSection(TableRowVo tableRow) {
+        if (tableRow != null) {
+            if (tableRow.getId() != -1) {
+                this.applicationData.getTableData().get(getActiveSection()).add(tableRow);
+                refreshTable();
+            } else {
+                throw new IllegalArgumentException(
+                        "Table row must have a correct ID. Current value = " + tableRow.getId());
+            }
+        }
     }
 }
