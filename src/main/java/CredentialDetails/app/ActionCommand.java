@@ -12,6 +12,10 @@ public enum ActionCommand {
     NEW_CREDENTIAL,
     REMOVE_CREDENTIAL,
 
+    NEW_SECTION,
+    EDIT_SECTION,
+    DELETE_SECTION,
+
     UNKNOWN;
 
     public static ActionCommand fromString(String value) {

@@ -23,7 +23,7 @@ public class SectionsListSelectionListener implements ListSelectionListener {
                 selectedItem = "";
             }
 
-            Application.getInstance().getModel().setActiveSection(selectedItem.toString());
+            Application.getInstance().getMainForm().getModel().setActiveSection(selectedItem.toString());
         }
     }
 }

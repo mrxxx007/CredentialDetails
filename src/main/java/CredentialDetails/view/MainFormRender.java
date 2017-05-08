@@ -27,7 +27,7 @@ public class MainFormRender {
         if (sectionData != null) {
             DefaultTableModel tableModel = (DefaultTableModel) mainForm.getMainTable().getModel();
 
-            ApplicationModel applicationModel = Application.getInstance().getModel();
+            ApplicationModel applicationModel = Application.getInstance().getMainForm().getModel();
             String activeSection = applicationModel.getActiveSection();
             Map<String, Set<String>> sectionColumns = applicationModel.getApplicationData().getSectionColumns();
             tableModel.setColumnIdentifiers(sectionColumns.get(activeSection).toArray());

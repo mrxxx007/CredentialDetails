@@ -4,6 +4,8 @@ import CredentialDetails.app.ActionCommand;
 import CredentialDetails.app.Application;
 import CredentialDetails.data.ApplicationModel;
 import CredentialDetails.data.TableRowVo;
+import CredentialDetails.forms.SectionsCEDDialog;
+import CredentialDetails.service.UserMessageService;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -19,10 +21,16 @@ public class DataController implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         ActionCommand actionCommand = ActionCommand.fromString(e.getActionCommand());
+        Application application = Application.getInstance();
 
         switch (actionCommand) {
+            case NEW_SECTION:
+                SectionsCEDDialog sectionsCEDDialog = new SectionsCEDDialog(application.getMainFrame());
+                sectionsCEDDialog.showDialog();
+                break;
             case NEW_CREDENTIAL:
-                ApplicationModel applicationModel = Application.getInstance().getModel();
+                //FIXME: NPE in case when table is empty (applicationModel.getApplicationData().getSectionColumns())
+                ApplicationModel applicationModel = Application.getInstance().getMainForm().getModel();
 
                 long rowId = applicationModel.getNextTableId();
 
@@ -43,13 +51,14 @@ public class DataController implements ActionListener {
                 tableRowData.setData(newRowData);
                 break;
             case REMOVE_CREDENTIAL:
-                ApplicationModel applicationModel1 = Application.getInstance().getModel();
+                ApplicationModel applicationModel1 = application.getMainForm().getModel();
 
-                JTable mainTable = Application.getInstance().getMainTable();
+                JTable mainTable = application.getMainForm().getMainTable();
                 int rowIndex = mainTable.getSelectedRow();
                 //mainTable.getModel().
                 break;
             case UNKNOWN:
+                UserMessageService.displayWarningMessage("Unknown command received: " + e.getActionCommand());
                 break;
         }
     }

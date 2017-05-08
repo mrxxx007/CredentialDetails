@@ -11,39 +11,60 @@ import java.awt.event.ActionListener;
 /**
  * Application startup class with single instance of a Main Frame
  */
-public class Application implements Runnable {
-    private static MainForm applicationInstance;
+public class Application {
+    private static MainForm mainForm;
+    private static Application instance;
+    private static JFrame mainFrame;
 
-    public static synchronized MainForm getInstance() {
-        if (applicationInstance == null) {
-            applicationInstance = new MainForm();
+    static {
+        instance = new Application();
+    }
+
+    private Application() { }
+
+    public static Application getInstance() {
+        return instance;
+    }
+
+
+    public synchronized MainForm getMainForm() {
+        if (mainForm == null) {
+            mainForm = new MainForm();
         }
-        return applicationInstance;
+        return mainForm;
+    }
+
+    public JFrame getMainFrame() {
+        return mainFrame;
     }
 
     public void run() {
-        try {
-            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (UnsupportedLookAndFeelException e) {
-            e.printStackTrace();
-        }
+        SwingUtilities.invokeLater(() -> {
+            try {
+                UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            } catch (InstantiationException e) {
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            } catch (UnsupportedLookAndFeelException e) {
+                e.printStackTrace();
+            }
 
-        JFrame frame = new JFrame("Credential Details");
-        frame.setContentPane(getInstance().$$$getRootComponent$$$());
-        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        frame.setJMenuBar(constructMenu());
-        frame.pack();
-        frame.setVisible(true);
+            mainFrame = new JFrame("Credential Details");
+            mainFrame.setContentPane(getMainForm().$$$getRootComponent$$$());
+            mainFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+            mainFrame.setJMenuBar(constructMenu());
+            mainFrame.pack();
+            mainFrame.setLocationRelativeTo(null);
+            mainFrame.setVisible(true);
+        });
     }
 
     private JMenuBar constructMenu() {
         JMenuBar menuBar = new JMenuBar();
+        final DataController dataController = new DataController();
 
         // File fileMenu
         JMenu fileMenu = new JMenu("File");
@@ -67,10 +88,13 @@ public class Application implements Runnable {
         // Sections menu
         JMenu sectionsMenu = new JMenu("Sections");
         JMenuItem addSectionItem = new JMenuItem("Add new section");
+        addSectionItem.setActionCommand(ActionCommand.NEW_SECTION.name());
         JMenuItem removeSectionItem = new JMenuItem("Remove section...");
+        removeSectionItem.setActionCommand(ActionCommand.DELETE_SECTION.name());
 
         sectionsMenu.add(addSectionItem);
         sectionsMenu.add(removeSectionItem);
+        setActionListenerForAllItems(sectionsMenu, dataController);
 
         // Credentials menu
         JMenu credentialsMenu = new JMenu("Credentials");
@@ -81,7 +105,7 @@ public class Application implements Runnable {
 
         credentialsMenu.add(addCredentialItem);
         credentialsMenu.add(removeCredentialItem);
-        setActionListenerForAllItems(credentialsMenu, new DataController());
+        setActionListenerForAllItems(credentialsMenu, dataController);
 
 
         menuBar.add(fileMenu);

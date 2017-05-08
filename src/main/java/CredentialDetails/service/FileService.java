@@ -36,7 +36,7 @@ public class FileService {
     }
 
     public static void saveApplicationDataToFile() {
-        ApplicationModel applicationModel = Application.getInstance().getModel();
+        ApplicationModel applicationModel = Application.getInstance().getMainForm().getModel();
         ApplicationData applicationData = applicationModel.getApplicationData();
         applicationData.setMaxTableId(applicationModel.getMaxTableId());
 
@@ -50,7 +50,7 @@ public class FileService {
     }
 
     private static ApplicationData getNewTestData() {
-        ApplicationModel applicationModel = Application.getInstance().getModel();
+        ApplicationModel applicationModel = Application.getInstance().getMainForm().getModel();
 
         Map<String, Set<String>> sectionColumns = new HashMap<>();
 

@@ -84,15 +84,7 @@ public class MainForm extends JFrame {
      * @param args arguments
      */
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(new Application());
-    }
-
-    public void onUpdate() {
-//        dirPath1.setText(model.getDirectory1());
-//        dirPath2.setText(model.getDirectory2());
-//
-//        onlyInDir1List.setListData(model.getOnlyInDir1().toArray());
-//        onlyInDir2List.setListData(model.getOnlyInDir2().toArray());
+        Application.getInstance().run();
     }
 
     {

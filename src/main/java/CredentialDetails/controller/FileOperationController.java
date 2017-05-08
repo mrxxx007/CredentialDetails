@@ -17,7 +17,7 @@ public class FileOperationController implements ActionListener{
     @Override
     public void actionPerformed(ActionEvent e) {
         ActionCommand actionCommand = ActionCommand.fromString(e.getActionCommand());
-        ApplicationModel applicationModel = Application.getInstance().getModel();
+        ApplicationModel applicationModel = Application.getInstance().getMainForm().getModel();
 
         switch (actionCommand) {
             case NEW_FILE:
