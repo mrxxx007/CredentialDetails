@@ -5,6 +5,7 @@ import CredentialDetails.app.Application;
 import CredentialDetails.data.ApplicationData;
 import CredentialDetails.data.ApplicationModel;
 import CredentialDetails.service.FileService;
+import CredentialDetails.service.UserMessageService;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -19,6 +20,9 @@ public class FileOperationController implements ActionListener{
         ApplicationModel applicationModel = Application.getInstance().getModel();
 
         switch (actionCommand) {
+            case NEW_FILE:
+                UserMessageService.displayErrorMessage("Not yet implemented");
+                break;
             case OPEN_FILE:
                 ApplicationData data = FileService.loadFromFile();
 
@@ -30,7 +34,7 @@ public class FileOperationController implements ActionListener{
                 break;
             case UNKNOWN:
             default:
-                System.out.println("Unknown command received: " + e.getActionCommand());
+                UserMessageService.displayErrorMessage("Unknown command received: " + e.getActionCommand());
         }
     }
 }
