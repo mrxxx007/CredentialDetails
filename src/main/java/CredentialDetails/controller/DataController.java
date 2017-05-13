@@ -2,6 +2,7 @@ package CredentialDetails.controller;
 
 import CredentialDetails.app.ActionCommand;
 import CredentialDetails.app.Application;
+import CredentialDetails.data.ApplicationData;
 import CredentialDetails.data.ApplicationModel;
 import CredentialDetails.data.SectionsCUDDialogModel;
 import CredentialDetails.data.TableRowVo;
@@ -33,6 +34,9 @@ public class DataController implements ActionListener {
             case EDIT_SECTION:
                 onEditSection(application);
                 break;
+            case DELETE_SECTION:
+                onDeleteSection(application);
+                break;
             case NEW_CREDENTIAL:
                 //FIXME: NPE in case when table is empty (applicationModel.getApplicationData().getSectionColumns())
                 ApplicationModel applicationModel = Application.getInstance().getMainForm().getModel();
@@ -63,6 +67,7 @@ public class DataController implements ActionListener {
                 //mainTable.getModel().
                 break;
             case UNKNOWN:
+            default:
                 UserMessageService.displayWarningMessage(
                         "[DataController] Unknown command received: " + e.getActionCommand());
                 break;
@@ -79,5 +84,22 @@ public class DataController implements ActionListener {
         dialogModel.addColumns(columns);
 
         editSectionsCUDDialog.showDialog();
+    }
+
+    private void onDeleteSection(Application application) {
+        final String activeSection = application.getMainForm().getModel().getActiveSection();
+        int result = JOptionPane.showConfirmDialog(Application.getInstance().getMainFrame(),
+                "Are you really want to remove section [" + activeSection + "]?",
+                "Remove section",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE);
+
+        if (result == JOptionPane.YES_OPTION) {
+            ApplicationModel appModel = application.getMainForm().getModel();
+            ApplicationData applicationData = appModel.getApplicationData();
+            applicationData.getSectionColumns().remove(activeSection);
+            applicationData.getTableData().remove(activeSection);
+            appModel.refreshAll();
+        }
     }
 }
