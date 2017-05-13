@@ -34,7 +34,8 @@ public class FileOperationController implements ActionListener{
                 break;
             case UNKNOWN:
             default:
-                UserMessageService.displayErrorMessage("Unknown command received: " + e.getActionCommand());
+                UserMessageService.displayWarningMessage(
+                        "[FileOperationController] Unknown command received: " + e.getActionCommand());
         }
     }
 }

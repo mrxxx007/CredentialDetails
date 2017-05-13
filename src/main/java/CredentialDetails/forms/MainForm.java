@@ -37,6 +37,7 @@ public class MainForm extends JFrame {
      * Constructor
      */
     public MainForm() {
+        getContentPane().add(mainPanel);
         model = new ApplicationModel(new MainFormRender(this));
 
         FileOperationController fileOperationController = new FileOperationController();

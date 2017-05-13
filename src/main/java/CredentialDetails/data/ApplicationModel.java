@@ -16,7 +16,7 @@ public class ApplicationModel {
     //private Map<String, SectionDataVo> tableData = Collections.emptyMap();
     private String activeSection = "";
     private AtomicLong maxTableId = new AtomicLong(0);
-    private ApplicationData applicationData;
+    private ApplicationData applicationData = new ApplicationData();
 
     /**
      * Constructor
@@ -30,8 +30,12 @@ public class ApplicationModel {
      * Refresh all data on the main form
      */
     public void refreshAll() {
-        render.renderSectionsList(applicationData.getTableData().keySet());
+        refreshSectionsList();
         refreshTable();
+    }
+
+    public void refreshSectionsList() {
+        render.renderSectionsList(applicationData.getTableData().keySet());
     }
 
     public void refreshTable() {

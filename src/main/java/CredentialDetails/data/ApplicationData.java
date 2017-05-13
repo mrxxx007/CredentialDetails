@@ -14,7 +14,7 @@ public class ApplicationData implements Serializable {
 
     private long maxTableId;
     /** Key - section name; Value - set of columns */
-    private Map<String, Set<String>> sectionColumns;
+    private Map<String, Set<String>> sectionColumns = new HashMap<>();
     /** Key - section name; Value - section data */
     private Map<String, Collection<TableRowVo>> tableData = new HashMap<>();
 
