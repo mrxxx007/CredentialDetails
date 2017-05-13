@@ -3,6 +3,7 @@ package CredentialDetails.controller;
 import CredentialDetails.app.ActionCommand;
 import CredentialDetails.app.Application;
 import CredentialDetails.data.ApplicationModel;
+import CredentialDetails.data.SectionsCUDDialogModel;
 import CredentialDetails.data.TableRowVo;
 import CredentialDetails.forms.SectionsCUDDialog;
 import CredentialDetails.service.UserMessageService;
@@ -12,6 +13,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by Admin on 01.05.2017.
@@ -25,8 +27,11 @@ public class DataController implements ActionListener {
 
         switch (actionCommand) {
             case NEW_SECTION:
-                SectionsCUDDialog sectionsCUDDialog = new SectionsCUDDialog(application.getMainFrame(), "New section");
-                sectionsCUDDialog.showDialog();
+                SectionsCUDDialog newSectionsCUDDialog = new SectionsCUDDialog(application.getMainFrame(), false);
+                newSectionsCUDDialog.showDialog();
+                break;
+            case EDIT_SECTION:
+                onEditSection(application);
                 break;
             case NEW_CREDENTIAL:
                 //FIXME: NPE in case when table is empty (applicationModel.getApplicationData().getSectionColumns())
@@ -62,5 +67,17 @@ public class DataController implements ActionListener {
                         "[DataController] Unknown command received: " + e.getActionCommand());
                 break;
         }
+    }
+
+    private void onEditSection(Application application) {
+        SectionsCUDDialog editSectionsCUDDialog = new SectionsCUDDialog(application.getMainFrame(), true);
+        SectionsCUDDialogModel dialogModel = editSectionsCUDDialog.getModel();
+        ApplicationModel appModel = application.getMainForm().getModel();
+        String activeSection = appModel.getActiveSection();
+        Set<String> columns = appModel.getApplicationData().getSectionColumns().get(activeSection);
+
+        dialogModel.addColumns(columns);
+
+        editSectionsCUDDialog.showDialog();
     }
 }

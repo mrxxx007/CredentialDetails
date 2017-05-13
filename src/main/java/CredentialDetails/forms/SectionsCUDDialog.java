@@ -23,6 +23,8 @@ import java.util.*;
 
 public class SectionsCUDDialog extends JDialog {
     private SectionsCUDDialogModel model;
+    private boolean editMode;
+    private String previousSectionName;
 
     private JPanel contentPane;
     private JButton okButton;
@@ -34,11 +36,18 @@ public class SectionsCUDDialog extends JDialog {
     private JButton moveDownButton;
     private JTextField sectionNameTextField;
 
-    public SectionsCUDDialog(JFrame owner, String title) {
+    public SectionsCUDDialog(JFrame owner, boolean isEditMode) {
         super(owner, true);
         this.model = new SectionsCUDDialogModel(new SectionsCUDDialogRender(this));
+        this.editMode = isEditMode;
 
-        setTitle(title);
+        if (isEditMode) {
+            setTitle("Edit section");
+            previousSectionName = Application.getInstance().getMainForm().getModel().getActiveSection();
+            sectionNameTextField.setText(previousSectionName);
+        } else {
+            setTitle("New section");
+        }
         getRootPane().setDefaultButton(okButton);
         getContentPane().add(contentPane);
 
@@ -107,19 +116,55 @@ public class SectionsCUDDialog extends JDialog {
             Map<String, Collection<TableRowVo>> tableData = appModel.getApplicationData().getTableData();
             Map<String, Set<String>> sectionColumns = appModel.getApplicationData().getSectionColumns();
 
-            Set<String> columns = new HashSet<>(listElementsCount);
+            Set<String> newColumns = new HashSet<>(listElementsCount);
             for (int idx = 0; idx < listElementsCount; idx++) {
-                columns.add(columnsList.getModel().getElementAt(idx).toString());
+                newColumns.add(columnsList.getModel().getElementAt(idx).toString());
             }
 
-            tableData.put(sectionName, new ArrayList<>());
-            sectionColumns.put(sectionName, columns);
+            if (editMode) {
+                if (!previousSectionName.equals(sectionName)) {
+                    // section name changed
+                    Collection<TableRowVo> removedValues = tableData.remove(previousSectionName);
+                    tableData.put(sectionName, removedValues);
+
+                    Set<String> removedColumns = sectionColumns.remove(previousSectionName);
+                    sectionColumns.put(sectionName, removedColumns);
+                }
+
+                Collection<String> diffRemovedColumns = getDifference(sectionColumns.get(sectionName), newColumns);
+                if (!diffRemovedColumns.isEmpty()) {
+                    // some of columns were removed
+                    sectionColumns.get(sectionName).removeAll(diffRemovedColumns);
+
+                    for (TableRowVo tableRowVo : tableData.get(sectionName)) {
+                        tableRowVo.getData().keySet().removeAll(diffRemovedColumns);
+                    }
+                }
+
+                Collection<String> diffAddedColumns = getDifference(newColumns, sectionColumns.get(sectionName));
+                if (!diffAddedColumns.isEmpty()) {
+                    // some columns were added
+                    sectionColumns.get(sectionName).addAll(diffAddedColumns);
+
+                    //TODO: maybe need to add new columns to the existing data
+                }
+            } else {
+                // create new section
+                tableData.put(sectionName, new ArrayList<>());
+                sectionColumns.put(sectionName, newColumns);
+            }
 
             // close dialog
             dispose();
 
             appModel.refreshSectionsList();
         }
+    }
+
+    private <T> Collection<T> getDifference(Collection<T> collection1, Collection<T> collection2) {
+        Collection<T> result = new ArrayList<>(collection1);
+        result.removeAll(collection2);
+        return result;
     }
 
     private void onCancel() {

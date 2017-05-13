@@ -87,12 +87,15 @@ public class Application {
 
         // Sections menu
         JMenu sectionsMenu = new JMenu("Sections");
-        JMenuItem addSectionItem = new JMenuItem("Add new section");
+        JMenuItem addSectionItem = new JMenuItem("Add new section...");
         addSectionItem.setActionCommand(ActionCommand.NEW_SECTION.name());
+        JMenuItem editSection = new JMenuItem("Edit section...");
+        editSection.setActionCommand(ActionCommand.EDIT_SECTION.name());
         JMenuItem removeSectionItem = new JMenuItem("Remove section...");
         removeSectionItem.setActionCommand(ActionCommand.DELETE_SECTION.name());
 
         sectionsMenu.add(addSectionItem);
+        sectionsMenu.add(editSection);
         sectionsMenu.add(removeSectionItem);
         setActionListenerForAllItems(sectionsMenu, dataController);
 

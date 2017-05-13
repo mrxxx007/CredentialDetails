@@ -3,6 +3,7 @@ package CredentialDetails.data;
 import CredentialDetails.view.SectionsCUDDialogRender;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 
 /**
@@ -24,6 +25,11 @@ public class SectionsCUDDialogModel {
 
     public void addColumn(String name) {
         columns.add(name);
+        render.refreshColumnsList();
+    }
+
+    public void addColumns(Collection<String> columns) {
+        this.columns.addAll(columns);
         render.refreshColumnsList();
     }
 
