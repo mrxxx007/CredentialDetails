@@ -8,8 +8,8 @@ import CredentialDetails.forms.MainForm;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 public class MainFormRender {
     private MainForm mainForm;
@@ -18,9 +18,10 @@ public class MainFormRender {
         this.mainForm = mainForm;
     }
 
-    public void renderSectionsList(Collection<String> items) {
+    public void renderSectionsList(Collection<String> items, String selectedItem) {
         JList sectionsList = mainForm.getSectionsList();
         sectionsList.setListData(items.toArray());
+        sectionsList.setSelectedValue(selectedItem, true);
     }
 
     public void renderTable(Collection<TableRowVo> sectionData) {
@@ -29,7 +30,7 @@ public class MainFormRender {
 
             ApplicationModel applicationModel = Application.getInstance().getMainForm().getModel();
             String activeSection = applicationModel.getActiveSection();
-            Map<String, Set<String>> sectionColumns = applicationModel.getApplicationData().getSectionColumns();
+            Map<String, List<String>> sectionColumns = applicationModel.getApplicationData().getSectionColumns();
             tableModel.setColumnIdentifiers(sectionColumns.get(activeSection).toArray());
             tableModel.setRowCount(0);
 

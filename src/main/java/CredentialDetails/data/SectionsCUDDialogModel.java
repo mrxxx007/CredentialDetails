@@ -14,6 +14,7 @@ public class SectionsCUDDialogModel {
 
     private ArrayList<String> columns = new ArrayList<>();
     private int selectedColumnIndex = -1;
+    private boolean columnOrderChanged;
 
     public SectionsCUDDialogModel(SectionsCUDDialogRender render) {
         this.render = render;
@@ -49,6 +50,7 @@ public class SectionsCUDDialogModel {
     public void moveColumn(int idxFrom, int idxTo, ArrayList<String> list) {
         Collections.swap(list, idxFrom, idxTo);
         selectedColumnIndex = idxTo;
+        columnOrderChanged = true;
         render.refreshColumnsList();
     }
 
@@ -58,5 +60,9 @@ public class SectionsCUDDialogModel {
 
     public void setSelectedColumnIndex(int selectedColumnIndex) {
         this.selectedColumnIndex = selectedColumnIndex;
+    }
+
+    public boolean isColumnOrderChanged() {
+        return columnOrderChanged;
     }
 }

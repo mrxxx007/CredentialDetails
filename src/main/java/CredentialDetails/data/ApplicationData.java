@@ -1,10 +1,7 @@
 package CredentialDetails.data;
 
 import java.io.Serializable;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * A serializable object to store application data in a file
@@ -14,7 +11,7 @@ public class ApplicationData implements Serializable {
 
     private long maxTableId;
     /** Key - section name; Value - set of columns */
-    private Map<String, Set<String>> sectionColumns = new HashMap<>();
+    private Map<String, List<String>> sectionColumns = new HashMap<>();
     /** Key - section name; Value - section data */
     private Map<String, Collection<TableRowVo>> tableData = new HashMap<>();
 
@@ -34,11 +31,11 @@ public class ApplicationData implements Serializable {
         this.tableData = tableData;
     }
 
-    public Map<String, Set<String>> getSectionColumns() {
+    public Map<String, List<String>> getSectionColumns() {
         return sectionColumns;
     }
 
-    public void setSectionColumns(Map<String, Set<String>> sectionColumns) {
+    public void setSectionColumns(Map<String, List<String>> sectionColumns) {
         this.sectionColumns = sectionColumns;
     }
 }

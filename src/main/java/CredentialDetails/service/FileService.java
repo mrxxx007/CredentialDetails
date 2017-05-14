@@ -52,9 +52,9 @@ public class FileService {
     private static ApplicationData getNewTestData() {
         ApplicationModel applicationModel = Application.getInstance().getMainForm().getModel();
 
-        Map<String, Set<String>> sectionColumns = new HashMap<>();
+        Map<String, List<String>> sectionColumns = new HashMap<>();
 
-        Set<String> internetSectionColumns = new HashSet<>();
+        List<String> internetSectionColumns = new ArrayList<>();
         internetSectionColumns.add("ID");
         internetSectionColumns.add("Title");
         internetSectionColumns.add("URL");
@@ -62,7 +62,7 @@ public class FileService {
         internetSectionColumns.add("Password");
         internetSectionColumns.add("Comments");
 
-        Set<String> gamesSectionColumns = new HashSet<>();
+        List<String> gamesSectionColumns = new ArrayList<>();
         gamesSectionColumns.add("ID");
         gamesSectionColumns.add("Title");
         gamesSectionColumns.add("URL");

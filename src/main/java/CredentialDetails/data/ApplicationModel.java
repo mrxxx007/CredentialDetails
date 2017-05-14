@@ -35,7 +35,7 @@ public class ApplicationModel {
     }
 
     public void refreshSectionsList() {
-        render.renderSectionsList(applicationData.getTableData().keySet());
+        render.renderSectionsList(applicationData.getTableData().keySet(), activeSection);
     }
 
     public void refreshTable() {

@@ -13,8 +13,8 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * Created by Admin on 01.05.2017.
@@ -75,21 +75,25 @@ public class DataController implements ActionListener {
     }
 
     private void onEditSection(Application application) {
-        SectionsCUDDialog editSectionsCUDDialog = new SectionsCUDDialog(application.getMainFrame(), true);
-        SectionsCUDDialogModel dialogModel = editSectionsCUDDialog.getModel();
         ApplicationModel appModel = application.getMainForm().getModel();
         String activeSection = appModel.getActiveSection();
-        Set<String> columns = appModel.getApplicationData().getSectionColumns().get(activeSection);
+        if (activeSection != null && !activeSection.isEmpty()) {
+            SectionsCUDDialog editSectionsCUDDialog = new SectionsCUDDialog(application.getMainFrame(), true);
+            SectionsCUDDialogModel dialogModel = editSectionsCUDDialog.getModel();
+            List<String> columns = appModel.getApplicationData().getSectionColumns().get(activeSection);
 
-        dialogModel.addColumns(columns);
+            dialogModel.addColumns(columns);
 
-        editSectionsCUDDialog.showDialog();
+            editSectionsCUDDialog.showDialog();
+        } else {
+            UserMessageService.displayWarningMessage("No one section selected");
+        }
     }
 
     private void onDeleteSection(Application application) {
         final String activeSection = application.getMainForm().getModel().getActiveSection();
         int result = JOptionPane.showConfirmDialog(Application.getInstance().getMainFrame(),
-                "Are you really want to remove section [" + activeSection + "]?",
+                "Are you really want to remove the section [" + activeSection + "]?",
                 "Remove section",
                 JOptionPane.YES_NO_OPTION,
                 JOptionPane.QUESTION_MESSAGE);

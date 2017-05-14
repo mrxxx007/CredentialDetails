@@ -20,6 +20,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.*;
+import java.util.List;
 
 public class SectionsCUDDialog extends JDialog {
     private SectionsCUDDialogModel model;
@@ -47,6 +48,7 @@ public class SectionsCUDDialog extends JDialog {
             sectionNameTextField.setText(previousSectionName);
         } else {
             setTitle("New section");
+            this.model.addColumn("ID");
         }
         getRootPane().setDefaultButton(okButton);
         getContentPane().add(contentPane);
@@ -75,7 +77,6 @@ public class SectionsCUDDialog extends JDialog {
                 return super.getListCellRendererComponent(list, value, index, isSelectedItem, cellHasFocus);
             }
         });
-        this.model.addColumn("ID");
 
         // call onCancel() when cross is clicked
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
@@ -114,20 +115,25 @@ public class SectionsCUDDialog extends JDialog {
         } else {
             ApplicationModel appModel = Application.getInstance().getMainForm().getModel();
             Map<String, Collection<TableRowVo>> tableData = appModel.getApplicationData().getTableData();
-            Map<String, Set<String>> sectionColumns = appModel.getApplicationData().getSectionColumns();
+            Map<String, List<String>> sectionColumns = appModel.getApplicationData().getSectionColumns();
 
-            Set<String> newColumns = new HashSet<>(listElementsCount);
+            List<String> newColumns = new ArrayList<>(listElementsCount);
             for (int idx = 0; idx < listElementsCount; idx++) {
                 newColumns.add(columnsList.getModel().getElementAt(idx).toString());
             }
 
             if (editMode) {
+                if (model.isColumnOrderChanged()) {
+                    sectionColumns.get(sectionName).clear();
+                    sectionColumns.get(sectionName).addAll(newColumns);
+                }
+
                 if (!previousSectionName.equals(sectionName)) {
                     // section name changed
                     Collection<TableRowVo> removedValues = tableData.remove(previousSectionName);
                     tableData.put(sectionName, removedValues);
 
-                    Set<String> removedColumns = sectionColumns.remove(previousSectionName);
+                    List<String> removedColumns = sectionColumns.remove(previousSectionName);
                     sectionColumns.put(sectionName, removedColumns);
                 }
 
@@ -157,7 +163,7 @@ public class SectionsCUDDialog extends JDialog {
             // close dialog
             dispose();
 
-            appModel.refreshSectionsList();
+            appModel.refreshAll();
         }
     }
 
