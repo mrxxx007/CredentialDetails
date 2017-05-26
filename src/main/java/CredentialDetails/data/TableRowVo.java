@@ -16,6 +16,10 @@ public class TableRowVo implements Serializable {
     /** Key - column name, Value - column data */
     private Map<String, String> data;
 
+    public TableRowVo(long id) {
+        this.id = id;
+    }
+
     public long getId() {
         return id;
     }

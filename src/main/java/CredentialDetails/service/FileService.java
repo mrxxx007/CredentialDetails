@@ -83,8 +83,7 @@ public class FileService {
         internetData1.put("Password", "qwerty123");
         internetData1.put("Comments", "Mailbox service");
 
-        TableRowVo internetRow1 = new TableRowVo();
-        internetRow1.setId(id);
+        TableRowVo internetRow1 = new TableRowVo(id);
         internetRow1.setSectionName("Internet");
         internetRow1.setData(internetData1);
 
@@ -98,8 +97,7 @@ public class FileService {
         internetData2.put("Password", "123456");
         internetData2.put("Comments", "");
 
-        TableRowVo internetRow2 = new TableRowVo();
-        internetRow2.setId(id);
+        TableRowVo internetRow2 = new TableRowVo(id);
         internetRow2.setSectionName("Internet");
         internetRow2.setData(internetData2);
 

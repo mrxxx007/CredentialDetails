@@ -5,16 +5,14 @@ import CredentialDetails.app.Application;
 import CredentialDetails.data.ApplicationData;
 import CredentialDetails.data.ApplicationModel;
 import CredentialDetails.data.SectionsCUDDialogModel;
-import CredentialDetails.data.TableRowVo;
+import CredentialDetails.forms.CredentialsCUDDialog;
 import CredentialDetails.forms.SectionsCUDDialog;
 import CredentialDetails.service.UserMessageService;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by Admin on 01.05.2017.
@@ -38,26 +36,15 @@ public class DataController implements ActionListener {
                 onDeleteSection(application);
                 break;
             case NEW_CREDENTIAL:
-                //FIXME: NPE in case when table is empty (applicationModel.getApplicationData().getSectionColumns())
                 ApplicationModel applicationModel = Application.getInstance().getMainForm().getModel();
-
-                long rowId = applicationModel.getNextTableId();
-
-                //TODO: temporary solution. Will be replaced by dialog window
                 String activeSection = applicationModel.getActiveSection();
-                Map<String, String> newRowData = new HashMap<>();
-                for (String columnName : applicationModel.getApplicationData().getSectionColumns().get(activeSection)) {
-                    if (columnName.equals("ID")) {
-                        newRowData.put(columnName, Long.toString(rowId));
-                    } else {
-                        newRowData.put(columnName, "value for " + columnName);
-                    }
+                if (activeSection != null && !activeSection.isEmpty()) {
+                    CredentialsCUDDialog dialog = new CredentialsCUDDialog(application.getMainFrame(), false);
+                    dialog.showDialog();
+                } else {
+                    UserMessageService.displayWarningMessage("Choose a section where you'd like to proceed");
                 }
 
-                TableRowVo tableRowData = new TableRowVo();
-                tableRowData.setId(rowId);
-                tableRowData.setSectionName(activeSection);
-                tableRowData.setData(newRowData);
                 break;
             case REMOVE_CREDENTIAL:
                 ApplicationModel applicationModel1 = application.getMainForm().getModel();
