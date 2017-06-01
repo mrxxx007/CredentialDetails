@@ -12,6 +12,7 @@ import com.intellij.uiDesigner.core.GridLayoutManager;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 
 /**
@@ -39,6 +40,14 @@ public class MainForm extends JFrame {
     public MainForm() {
         getContentPane().add(mainPanel);
         model = new ApplicationModel(new MainFormRender(this));
+
+        // disable editing of all cells in the table
+        mainTable.setModel(new DefaultTableModel() {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        });
 
         FileOperationController fileOperationController = new FileOperationController();
         loadButton.setActionCommand(ActionCommand.OPEN_FILE.name());
@@ -118,6 +127,10 @@ public class MainForm extends JFrame {
         mainSplitPane.setRightComponent(credentialsScrollPane);
         credentialsScrollPane.setBorder(BorderFactory.createTitledBorder(null, "Credentials data", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.ABOVE_TOP));
         mainTable = new JTable();
+        mainTable.setAutoCreateRowSorter(false);
+        mainTable.setIntercellSpacing(new Dimension(1, 1));
+        mainTable.setShowHorizontalLines(true);
+        mainTable.setShowVerticalLines(true);
         credentialsScrollPane.setViewportView(mainTable);
         sectionsScrollPane = new JScrollPane();
         mainSplitPane.setLeftComponent(sectionsScrollPane);

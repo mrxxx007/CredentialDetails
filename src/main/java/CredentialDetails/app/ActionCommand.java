@@ -11,6 +11,7 @@ public enum ActionCommand {
     EXIT,
 
     NEW_CREDENTIAL,
+    EDIT_CREDENTIAL,
     REMOVE_CREDENTIAL,
 
     NEW_SECTION,

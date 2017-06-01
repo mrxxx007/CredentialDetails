@@ -2,6 +2,8 @@ package CredentialDetails.data;
 
 import CredentialDetails.view.MainFormRender;
 
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
@@ -73,6 +75,13 @@ public class ApplicationModel {
         refreshTable();
     }
 
+    public void deleteActiveSection() {
+        ApplicationData applicationData = this.applicationData;
+        applicationData.getSectionColumns().remove(activeSection);
+        applicationData.getTableData().remove(activeSection);
+        refreshAll();
+    }
+
     public void appendTableDataForActiveSection(TableRowVo tableRow) {
         if (tableRow != null) {
             if (tableRow.getId() != -1) {
@@ -83,5 +92,40 @@ public class ApplicationModel {
                         "Table row must have a correct ID. Current value = " + tableRow.getId());
             }
         }
+    }
+
+    public void updateTableRowData(TableRowVo updatedRow) {
+        long id = updatedRow.getId();
+
+        TableRowVo tableRow = findRowById(id);
+        if (tableRow != null) {
+            tableRow.setData(updatedRow.getData());
+            refreshTable();
+        }
+    }
+
+    public void deleteTableRow(long rowId) {
+        Collection<TableRowVo> tableRows = this.applicationData.getTableData().get(activeSection);
+        Iterator<TableRowVo> iterator = tableRows.iterator();
+        while (iterator.hasNext()) {
+            if (iterator.next().getId() == rowId) {
+                iterator.remove();
+                refreshTable();
+                break;
+            }
+        }
+    }
+
+    private TableRowVo findRowById(long id) {
+        TableRowVo result = null;
+        Collection<TableRowVo> tableRows = this.applicationData.getTableData().get(activeSection);
+        for (TableRowVo tableRow : tableRows) {
+            if (tableRow.getId() == id) {
+                result = tableRow;
+                break;
+            }
+        }
+
+        return result;
     }
 }

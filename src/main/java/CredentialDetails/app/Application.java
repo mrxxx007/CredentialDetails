@@ -101,12 +101,15 @@ public class Application {
 
         // Credentials menu
         JMenu credentialsMenu = new JMenu("Credentials");
-        JMenuItem addCredentialItem = new JMenuItem("Add new");
+        JMenuItem addCredentialItem = new JMenuItem("Add new...");
         addCredentialItem.setActionCommand(ActionCommand.NEW_CREDENTIAL.name());
         JMenuItem removeCredentialItem = new JMenuItem("Remove selected");
         removeCredentialItem.setActionCommand(ActionCommand.REMOVE_CREDENTIAL.name());
+        JMenuItem editCredentialItem = new JMenuItem("Edit selected...");
+        editCredentialItem.setActionCommand(ActionCommand.EDIT_CREDENTIAL.name());
 
         credentialsMenu.add(addCredentialItem);
+        credentialsMenu.add(editCredentialItem);
         credentialsMenu.add(removeCredentialItem);
         setActionListenerForAllItems(credentialsMenu, dataController);
 

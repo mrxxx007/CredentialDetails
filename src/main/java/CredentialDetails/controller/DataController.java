@@ -2,7 +2,6 @@ package CredentialDetails.controller;
 
 import CredentialDetails.app.ActionCommand;
 import CredentialDetails.app.Application;
-import CredentialDetails.data.ApplicationData;
 import CredentialDetails.data.ApplicationModel;
 import CredentialDetails.data.SectionsCUDDialogModel;
 import CredentialDetails.forms.CredentialsCUDDialog;
@@ -36,7 +35,7 @@ public class DataController implements ActionListener {
                 onDeleteSection(application);
                 break;
             case NEW_CREDENTIAL:
-                ApplicationModel applicationModel = Application.getInstance().getMainForm().getModel();
+                ApplicationModel applicationModel = application.getMainForm().getModel();
                 String activeSection = applicationModel.getActiveSection();
                 if (activeSection != null && !activeSection.isEmpty()) {
                     CredentialsCUDDialog dialog = new CredentialsCUDDialog(application.getMainFrame(), false);
@@ -47,11 +46,12 @@ public class DataController implements ActionListener {
 
                 break;
             case REMOVE_CREDENTIAL:
-                ApplicationModel applicationModel1 = application.getMainForm().getModel();
-
-                JTable mainTable = application.getMainForm().getMainTable();
-                int rowIndex = mainTable.getSelectedRow();
-                //mainTable.getModel().
+                onDeleteCredential(application);
+                break;
+            case EDIT_CREDENTIAL:
+                long id = getSelectedRowId(application.getMainForm().getMainTable());
+                CredentialsCUDDialog dialog = new CredentialsCUDDialog(application.getMainFrame(), true, id);
+                dialog.showDialog();
                 break;
             case UNKNOWN:
             default:
@@ -79,18 +79,44 @@ public class DataController implements ActionListener {
 
     private void onDeleteSection(Application application) {
         final String activeSection = application.getMainForm().getModel().getActiveSection();
-        int result = JOptionPane.showConfirmDialog(Application.getInstance().getMainFrame(),
-                "Are you really want to remove the section [" + activeSection + "]?",
-                "Remove section",
+        int result = JOptionPane.showConfirmDialog(application.getMainFrame(),
+                "Are you really want to delete whole section [" + activeSection + "]?\n" +
+                        "All data under it will also be deleted.",
+                "Delete section",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.WARNING_MESSAGE);
+
+        if (result == JOptionPane.YES_OPTION) {
+            ApplicationModel appModel = application.getMainForm().getModel();
+            appModel.deleteActiveSection();
+        }
+    }
+
+    private void onDeleteCredential(Application application) {
+        long rowId = getSelectedRowId(application.getMainForm().getMainTable());
+
+        int result = JOptionPane.showConfirmDialog(application.getMainFrame(),
+                "Do you want to delete selected credential's entry?",
+                "Delete credentials entry",
                 JOptionPane.YES_NO_OPTION,
                 JOptionPane.QUESTION_MESSAGE);
 
         if (result == JOptionPane.YES_OPTION) {
-            ApplicationModel appModel = application.getMainForm().getModel();
-            ApplicationData applicationData = appModel.getApplicationData();
-            applicationData.getSectionColumns().remove(activeSection);
-            applicationData.getTableData().remove(activeSection);
-            appModel.refreshAll();
+            application.getMainForm().getModel().deleteTableRow(rowId);
         }
+    }
+
+    private long getSelectedRowId(JTable table) {
+        int rowIndex = table.getSelectedRow();
+        // get column index on view (may not be equals to index in the model)
+        int columnIndex = table.getColumnModel().getColumnIndex("ID");
+        String idStrValue = table.getValueAt(rowIndex, columnIndex).toString();
+
+        long result = -1;
+        if (idStrValue != null && !idStrValue.isEmpty()) {
+            result = Long.parseLong(idStrValue);
+        }
+
+        return result;
     }
 }

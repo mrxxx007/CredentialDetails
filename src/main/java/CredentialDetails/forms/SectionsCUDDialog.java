@@ -238,6 +238,7 @@ public class SectionsCUDDialog extends JDialog {
         removeColumnButton.setToolTipText("Remove column");
         panel5.add(removeColumnButton, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         moveUpButton = new JButton();
+        moveUpButton.setHideActionText(false);
         moveUpButton.setIcon(new ImageIcon(getClass().getResource("/images/up-icon_x24.png")));
         moveUpButton.setText("");
         moveUpButton.setToolTipText("Move up");

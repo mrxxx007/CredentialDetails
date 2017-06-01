@@ -39,7 +39,12 @@
                 <children>
                   <component id="61f8c" class="javax.swing.JTable" binding="mainTable">
                     <constraints/>
-                    <properties/>
+                    <properties>
+                      <autoCreateRowSorter value="false"/>
+                      <intercellSpacing width="1" height="1"/>
+                      <showHorizontalLines value="true"/>
+                      <showVerticalLines value="true"/>
+                    </properties>
                   </component>
                 </children>
               </scrollpane>

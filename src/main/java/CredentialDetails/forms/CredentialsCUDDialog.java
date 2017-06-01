@@ -19,6 +19,7 @@ public class CredentialsCUDDialog extends JDialog {
     // Map<columnName, columnValue>
     private Map<String, JTextField> columnValuesMap;
     private boolean editMode;
+    private long selectedTableRowId;
 
     private JPanel contentPane;
     private JButton buttonOK;
@@ -27,12 +28,17 @@ public class CredentialsCUDDialog extends JDialog {
     private JPanel mainPanel;
 
     public CredentialsCUDDialog(JFrame owner, boolean isEditMode) {
+        this(owner, isEditMode, -1);
+    }
+
+    public CredentialsCUDDialog(JFrame owner, boolean isEditMode, long selectedTableRowId) {
         super(owner, true);
+        this.editMode = isEditMode;
+        this.selectedTableRowId = selectedTableRowId;
+
         $$$setupUI$$$();
         setContentPane(contentPane);
-//        setModal(true);
         getRootPane().setDefaultButton(buttonOK);
-        this.editMode = isEditMode;
 
 
         // listeners
@@ -74,9 +80,6 @@ public class CredentialsCUDDialog extends JDialog {
         ApplicationModel applicationModel = Application.getInstance().getMainForm().getModel();
         String activeSection = applicationModel.getActiveSection();
 
-        Collection<TableRowVo> sectionData = applicationModel.getApplicationData().getTableData().get(activeSection);
-
-
         Map<String, String> data = new HashMap<>();
         for (Map.Entry<String, JTextField> entry : columnValuesMap.entrySet()) {
             data.put(entry.getKey(), entry.getValue().getText());
@@ -88,8 +91,11 @@ public class CredentialsCUDDialog extends JDialog {
         newTableRow.setSectionName(activeSection);
         newTableRow.setData(data);
 
-        sectionData.add(newTableRow);
-        applicationModel.refreshTable();
+        if (editMode) {
+            applicationModel.updateTableRowData(newTableRow);
+        } else {
+            applicationModel.appendTableDataForActiveSection(newTableRow);
+        }
 
         dispose();
     }
@@ -101,8 +107,16 @@ public class CredentialsCUDDialog extends JDialog {
 
 
     private void createUIComponents() {
-        ApplicationModel appModel = Application.getInstance().getMainForm().getModel();
-        List<String> sectionColumns = appModel.getApplicationData().getSectionColumns().get(appModel.getActiveSection());
+        final ApplicationModel appModel = Application.getInstance().getMainForm().getModel();
+        final String activeSection = appModel.getActiveSection();
+        final List<String> sectionColumns = appModel.getApplicationData().getSectionColumns().get(activeSection);
+        final long tableRowId = editMode
+                ? this.selectedTableRowId
+                : appModel.getNextTableId();
+
+        final TableRowVo selectedTableRow = editMode
+                ? getTableRowFromAppModel(appModel, activeSection, tableRowId)
+                : null;
 
         columnValuesMap = new HashMap<>(sectionColumns.size());
 
@@ -122,16 +136,30 @@ public class CredentialsCUDDialog extends JDialog {
             if (column.equalsIgnoreCase("ID")) {
                 field.setEnabled(false);
                 field.setEditable(false);
-
-                if (editMode) {
-                    //TODO: fill value
-                } else {
-                    field.setText(appModel.getNextTableId() + "");
+                field.setText(tableRowId + "");
+            } else {
+                if (editMode && selectedTableRow != null) {
+                    field.setText(selectedTableRow.getData().get(column));
                 }
             }
+
             columnValuesMap.put(column, field);
             index++;
         }
+    }
+
+    private TableRowVo getTableRowFromAppModel(ApplicationModel appModel, String activeSection, long rowId) {
+        Collection<TableRowVo> tableRowVos = appModel.getApplicationData().getTableData().get(activeSection);
+
+        TableRowVo result = null;
+        for (TableRowVo tableRowVo : tableRowVos) {
+            if (tableRowVo.getId() == rowId) {
+                result = tableRowVo;
+                break;
+            }
+        }
+
+        return result;
     }
 
     /**
