@@ -2,6 +2,7 @@ package CredentialDetails.data;
 
 import CredentialDetails.view.MainFormRender;
 
+import java.io.File;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.concurrent.atomic.AtomicLong;
@@ -12,10 +13,7 @@ import java.util.concurrent.atomic.AtomicLong;
 public class ApplicationModel {
     private MainFormRender render;
 
-    /**
-     * Key - section name; Value - section data
-     */
-    //private Map<String, SectionDataVo> tableData = Collections.emptyMap();
+    private File currentFile;
     private String activeSection = "";
     private AtomicLong maxTableId = new AtomicLong(0);
     private ApplicationData applicationData = new ApplicationData();
@@ -52,10 +50,13 @@ public class ApplicationModel {
         return this.maxTableId.get();
     }
 
-    public void setMaxTableId(long value) {
-        this.maxTableId.set(value);
+    public File getCurrentFile() {
+        return currentFile;
     }
 
+    public void setCurrentFile(File currentFile) {
+        this.currentFile = currentFile;
+    }
 
     public ApplicationData getApplicationData() {
         return applicationData;

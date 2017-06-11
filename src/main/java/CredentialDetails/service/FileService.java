@@ -15,10 +15,10 @@ import java.util.*;
 public class FileService {
     private static final String TEMP_FILE_NAME = "C:\\temp\\credentialDetails.dat";
 
-    public static ApplicationData loadFromFile() {
-        File file = new File(TEMP_FILE_NAME);
+    public static ApplicationData loadFromFile(File file) {
+        //File file = new File(TEMP_FILE_NAME);
         ApplicationData data = null;
-        if (file.exists()) {
+        if (file != null && file.exists()) {
             try (FileInputStream fileOutputStream = new FileInputStream(file)) {
                 try (ObjectInputStream input = new ObjectInputStream(fileOutputStream)) {
                     data = (ApplicationData) input.readObject();
@@ -29,7 +29,7 @@ public class FileService {
                 e.printStackTrace();
             }
         } else {
-            data = getNewTestData();
+            UserMessageService.displayErrorMessage("Could not load from file: file name is empty");
         }
 
         return data;
@@ -39,8 +39,9 @@ public class FileService {
         ApplicationModel applicationModel = Application.getInstance().getMainForm().getModel();
         ApplicationData applicationData = applicationModel.getApplicationData();
         applicationData.setMaxTableId(applicationModel.getMaxTableId());
+        final File file = applicationModel.getCurrentFile();
 
-        try (FileOutputStream fileOutputStream = new FileOutputStream(TEMP_FILE_NAME)) {
+        try (FileOutputStream fileOutputStream = new FileOutputStream(file)) {
             try (ObjectOutputStream output = new ObjectOutputStream(fileOutputStream)) {
                 output.writeObject(applicationData);
             }

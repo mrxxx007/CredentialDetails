@@ -25,8 +25,8 @@ public class MainFormRender {
     }
 
     public void renderTable(Collection<TableRowVo> sectionData) {
+        DefaultTableModel tableModel = (DefaultTableModel) mainForm.getMainTable().getModel();
         if (sectionData != null) {
-            DefaultTableModel tableModel = (DefaultTableModel) mainForm.getMainTable().getModel();
 
             ApplicationModel applicationModel = Application.getInstance().getMainForm().getModel();
             String activeSection = applicationModel.getActiveSection();
@@ -46,27 +46,10 @@ public class MainFormRender {
                 }
                 tableModel.addRow(tableRow);
             }
-
-//            Collection<Map<String, String>> data = sectionData.getData();
-//            for (Map<String, String> rowData : data) {
-//                int columnCount = tableModel.getColumnCount();
-//                Object[] tableRow = new Object[columnCount];
-//                for (int i = 0; i < columnCount; i++) {
-//
-//                    String columnName = tableModel.getColumnName(i);
-//                    tableRow[i] = rowData.get(columnName);
-//                }
-//                tableModel.addRow(tableRow);
-//            }
-
-//            for (TableContentVo data : tableData) {
-//                tableModel.addRow(new Object[]{
-//                        data.getTitle(),
-//                        data.getUrl(),
-//                        data.getLogin(),
-//                        data.getPassword(),
-//                        data.getComment()});
-//            }
+        } else {
+            // clear table
+            tableModel.setRowCount(0);
+            tableModel.setColumnCount(0);
         }
     }
 }

@@ -74,12 +74,15 @@ public class Application {
         openMenuItem.setActionCommand(ActionCommand.OPEN_FILE.name());
         JMenuItem saveMenuItem = new JMenuItem("Save");
         saveMenuItem.setActionCommand(ActionCommand.SAVE_FILE.name());
+        JMenuItem exportMenuItem = new JMenuItem("Export...");
+        exportMenuItem.setActionCommand(ActionCommand.EXPORT_FILE.name());
         JMenuItem exitMenuItem = new JMenuItem("Exit");
         exitMenuItem.setActionCommand(ActionCommand.EXIT.name());
 
         fileMenu.add(newMenuItem);
         fileMenu.add(openMenuItem);
         fileMenu.add(saveMenuItem);
+        fileMenu.add(exportMenuItem);
         fileMenu.addSeparator();
         fileMenu.add(exitMenuItem);
 

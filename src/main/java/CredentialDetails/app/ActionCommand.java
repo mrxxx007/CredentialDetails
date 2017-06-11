@@ -8,6 +8,7 @@ public enum ActionCommand {
     NEW_FILE,
     OPEN_FILE,
     SAVE_FILE,
+    EXPORT_FILE,
     EXIT,
 
     NEW_CREDENTIAL,
