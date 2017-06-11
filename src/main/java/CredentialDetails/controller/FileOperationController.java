@@ -44,9 +44,12 @@ public class FileOperationController implements ActionListener{
                     File result = fileChooser.getSelectedFile();
                     ApplicationData data = FileService.loadFromFile(result);
 
-                    applicationModel.setApplicationData(data);
-                    applicationModel.setActiveSection("");
-                    applicationModel.refreshAll();
+                    if (data != null) {
+                        applicationModel.setApplicationData(data);
+                        applicationModel.setActiveSection("");
+                        applicationModel.setCurrentFile(result);
+                        applicationModel.refreshAll();
+                    }
                 }
                 break;
             case SAVE_FILE:

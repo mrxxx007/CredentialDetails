@@ -5,7 +5,6 @@ import CredentialDetails.view.MainFormRender;
 import java.io.File;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * Model class for application
@@ -15,7 +14,6 @@ public class ApplicationModel {
 
     private File currentFile;
     private String activeSection = "";
-    private AtomicLong maxTableId = new AtomicLong(0);
     private ApplicationData applicationData = new ApplicationData();
 
     /**
@@ -43,11 +41,11 @@ public class ApplicationModel {
     }
 
     public long getNextTableId() {
-        return this.maxTableId.incrementAndGet();
+        return this.applicationData.getNextTableId();
     }
 
     public long getMaxTableId() {
-        return this.maxTableId.get();
+        return this.applicationData.getCurrentTableId();
     }
 
     public File getCurrentFile() {

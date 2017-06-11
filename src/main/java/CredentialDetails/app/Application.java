@@ -2,6 +2,7 @@ package CredentialDetails.app;
 
 import CredentialDetails.controller.DataController;
 import CredentialDetails.controller.FileOperationController;
+import CredentialDetails.exception.UncaughtExceptionHandler;
 import CredentialDetails.forms.MainForm;
 
 import javax.swing.*;
@@ -51,6 +52,7 @@ public class Application {
             } catch (UnsupportedLookAndFeelException e) {
                 e.printStackTrace();
             }
+            Toolkit.getDefaultToolkit().getSystemEventQueue().push(new UncaughtExceptionHandler());
 
             mainFrame = new JFrame("Credential Details");
             mainFrame.setContentPane(getMainForm().$$$getRootComponent$$$());

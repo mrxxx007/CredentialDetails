@@ -13,23 +13,24 @@ import java.util.*;
  * Created by Admin on 25.04.2017.
  */
 public class FileService {
-    private static final String TEMP_FILE_NAME = "C:\\temp\\credentialDetails.dat";
-
     public static ApplicationData loadFromFile(File file) {
-        //File file = new File(TEMP_FILE_NAME);
         ApplicationData data = null;
         if (file != null && file.exists()) {
             try (FileInputStream fileOutputStream = new FileInputStream(file)) {
                 try (ObjectInputStream input = new ObjectInputStream(fileOutputStream)) {
                     data = (ApplicationData) input.readObject();
                 } catch (ClassNotFoundException e) {
-                    e.printStackTrace();
+                    UserMessageService.displayErrorMessage(e.getMessage());
+                } catch (InvalidClassException e) {
+                    UserMessageService.displayErrorMessage("<html>Unable to load from file <b>" + file.getName() +
+                            "</b>. <hr/>Perhaps it was created by another application or by previous version of this <br/>" +
+                            "application which is not compatible with the current one.</html>", "Error: incompatible file");
                 }
             } catch (IOException e) {
-                e.printStackTrace();
+                UserMessageService.displayErrorMessage(e.getMessage());
             }
         } else {
-            UserMessageService.displayErrorMessage("Could not load from file: file name is empty");
+            UserMessageService.displayErrorMessage("Could not load from file: file name is empty", "Error");
         }
 
         return data;
@@ -38,7 +39,6 @@ public class FileService {
     public static void saveApplicationDataToFile() {
         ApplicationModel applicationModel = Application.getInstance().getMainForm().getModel();
         ApplicationData applicationData = applicationModel.getApplicationData();
-        applicationData.setMaxTableId(applicationModel.getMaxTableId());
         final File file = applicationModel.getCurrentFile();
 
         try (FileOutputStream fileOutputStream = new FileOutputStream(file)) {
@@ -109,7 +109,7 @@ public class FileService {
 
         ApplicationData applicationData = new ApplicationData();
         applicationData.setSectionColumns(sectionColumns);
-        applicationData.setMaxTableId(applicationModel.getMaxTableId());
+        //applicationData.setMaxTableId(applicationModel.getMaxTableId());
         applicationData.getTableData().put("Internet", internetTableData);
 
         return applicationData;

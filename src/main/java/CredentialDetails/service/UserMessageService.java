@@ -19,7 +19,11 @@ public class UserMessageService {
     }
 
     public static void displayErrorMessage(String message) {
-        displayMessage(message, JOptionPane.ERROR_MESSAGE, "Application Error");
+        displayErrorMessage(message, "Application Error");
+    }
+
+    public static void displayErrorMessage(String message, String title) {
+        displayMessage(message, JOptionPane.ERROR_MESSAGE, title);
     }
 
 
