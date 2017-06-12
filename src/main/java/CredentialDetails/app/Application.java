@@ -4,10 +4,13 @@ import CredentialDetails.controller.DataController;
 import CredentialDetails.controller.FileOperationController;
 import CredentialDetails.exception.UncaughtExceptionHandler;
 import CredentialDetails.forms.MainForm;
+import CredentialDetails.service.StatusBarService;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
 
 /**
  * Application startup class with single instance of a Main Frame
@@ -16,9 +19,11 @@ public class Application {
     private static MainForm mainForm;
     private static Application instance;
     private static JFrame mainFrame;
+    private static BlockingQueue<String> statusBarMessageQueue;
 
     static {
         instance = new Application();
+        statusBarMessageQueue = new ArrayBlockingQueue<>(25);
     }
 
     private Application() { }
@@ -62,6 +67,13 @@ public class Application {
             mainFrame.setLocationRelativeTo(null);
             mainFrame.setVisible(true);
         });
+
+        // message producer
+        StatusBarService.setMessageQueue(statusBarMessageQueue);
+
+        // message consumer
+        Thread consumer = new Thread(new StatusBarMessageConsumer(statusBarMessageQueue));
+        consumer.start();
     }
 
     private JMenuBar constructMenu() {

@@ -7,6 +7,7 @@ import CredentialDetails.data.ApplicationData;
 import CredentialDetails.data.ApplicationModel;
 import CredentialDetails.forms.NewFileDialog;
 import CredentialDetails.service.FileService;
+import CredentialDetails.service.StatusBarService;
 import CredentialDetails.service.UserMessageService;
 
 import javax.swing.*;
@@ -51,9 +52,11 @@ public class FileOperationController implements ActionListener{
                         applicationModel.refreshAll();
                     }
                 }
+                StatusBarService.displayMessage("Load completed");
                 break;
             case SAVE_FILE:
                 FileService.saveApplicationDataToFile();
+                StatusBarService.displayMessage("Saved successfully");
                 break;
             case UNKNOWN:
             default:
