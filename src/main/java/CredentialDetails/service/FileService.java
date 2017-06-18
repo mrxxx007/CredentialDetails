@@ -44,9 +44,11 @@ public class FileService {
         try (FileOutputStream fileOutputStream = new FileOutputStream(file)) {
             try (ObjectOutputStream output = new ObjectOutputStream(fileOutputStream)) {
                 output.writeObject(applicationData);
+                StatusBarService.displayMessage("Saved successfully");
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            UserMessageService.displayErrorMessage(e.getMessage());
+            StatusBarService.displayMessage("Could not save to file");
         }
     }
 

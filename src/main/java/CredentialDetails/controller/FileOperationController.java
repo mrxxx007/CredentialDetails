@@ -51,12 +51,11 @@ public class FileOperationController implements ActionListener{
                         applicationModel.setCurrentFile(result);
                         applicationModel.refreshAll();
                     }
+                    StatusBarService.displayMessage("Load completed");
                 }
-                StatusBarService.displayMessage("Load completed");
                 break;
             case SAVE_FILE:
                 FileService.saveApplicationDataToFile();
-                StatusBarService.displayMessage("Saved successfully");
                 break;
             case UNKNOWN:
             default:

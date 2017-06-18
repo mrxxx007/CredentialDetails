@@ -26,8 +26,8 @@ public class MainForm extends JFrame {
     private JPanel mainPanel;
     private JTable mainTable;
     private JList sectionsList;
-    private JButton addRowButton;
-    private JButton deleteRowButton;
+    private JButton addEntryButton;
+    private JButton deleteEntryButton;
     private JButton searchButton;
     private JButton loadButton;
     private JButton saveButton;
@@ -35,6 +35,8 @@ public class MainForm extends JFrame {
     private JScrollPane credentialsScrollPane;
     private JSplitPane mainSplitPane;
     private JLabel statusBarLabel;
+    private JButton button1;
+    private JButton editEntryButton;
 
     /**
      * Constructor
@@ -162,27 +164,44 @@ public class MainForm extends JFrame {
         final JToolBar toolBar1 = new JToolBar();
         toolBar1.setFloatable(false);
         mainPanel.add(toolBar1, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(-1, 20), null, 0, false));
+        button1 = new JButton();
+        button1.setIcon(new ImageIcon(getClass().getResource("/images/new-document.png")));
+        button1.setText("");
+        button1.setToolTipText("Create new file");
+        toolBar1.add(button1);
         loadButton = new JButton();
-        loadButton.setText("Load");
+        loadButton.setIcon(new ImageIcon(getClass().getResource("/images/open-file.png")));
+        loadButton.setText("");
+        loadButton.setToolTipText("Open file");
         toolBar1.add(loadButton);
         saveButton = new JButton();
-        saveButton.setText("Save");
+        saveButton.setIcon(new ImageIcon(getClass().getResource("/images/save.png")));
+        saveButton.setText("");
+        saveButton.setToolTipText("Save to file");
         toolBar1.add(saveButton);
         final JToolBar.Separator toolBar$Separator1 = new JToolBar.Separator();
         toolBar1.add(toolBar$Separator1);
-        addRowButton = new JButton();
-        addRowButton.setHideActionText(false);
-        addRowButton.setHorizontalAlignment(0);
-        addRowButton.setIcon(new ImageIcon(getClass().getResource("/images/add-icon.png")));
-        addRowButton.setText("Add row");
-        toolBar1.add(addRowButton);
-        deleteRowButton = new JButton();
-        deleteRowButton.setIcon(new ImageIcon(getClass().getResource("/images/delete-icon.png")));
-        deleteRowButton.setText("Delete row");
-        toolBar1.add(deleteRowButton);
+        addEntryButton = new JButton();
+        addEntryButton.setHideActionText(false);
+        addEntryButton.setHorizontalAlignment(0);
+        addEntryButton.setIcon(new ImageIcon(getClass().getResource("/images/add-icon.png")));
+        addEntryButton.setText("");
+        addEntryButton.setToolTipText("Add new entry");
+        toolBar1.add(addEntryButton);
+        editEntryButton = new JButton();
+        editEntryButton.setIcon(new ImageIcon(getClass().getResource("/images/edit.png")));
+        editEntryButton.setText("");
+        editEntryButton.setToolTipText("Edit selected entry");
+        toolBar1.add(editEntryButton);
+        deleteEntryButton = new JButton();
+        deleteEntryButton.setIcon(new ImageIcon(getClass().getResource("/images/delete.png")));
+        deleteEntryButton.setText("");
+        deleteEntryButton.setToolTipText("Delete selected entry");
+        toolBar1.add(deleteEntryButton);
         searchButton = new JButton();
         searchButton.setIcon(new ImageIcon(getClass().getResource("/images/search-icon.png")));
-        searchButton.setText("Search");
+        searchButton.setText("");
+        searchButton.setToolTipText("Search");
         toolBar1.add(searchButton);
     }
 
