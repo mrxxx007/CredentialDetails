@@ -1,21 +1,16 @@
 package CredentialDetails.controller;
 
 import CredentialDetails.app.ActionCommand;
-import CredentialDetails.app.AppConstants;
 import CredentialDetails.app.Application;
-import CredentialDetails.data.ApplicationData;
 import CredentialDetails.data.ApplicationModel;
 import CredentialDetails.forms.NewFileDialog;
+import CredentialDetails.forms.OpenFileDialog;
 import CredentialDetails.service.FileService;
 import CredentialDetails.service.StatusBarService;
 import CredentialDetails.service.UserMessageService;
 
-import javax.swing.*;
-import javax.swing.filechooser.FileFilter;
-import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
 
 /**
  * Created by Admin on 23.04.2017.
@@ -33,29 +28,18 @@ public class FileOperationController implements ActionListener{
                 newFileDialog.showDialog();
                 break;
             case OPEN_FILE:
-                final JFileChooser fileChooser = new JFileChooser();
-                fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-                fileChooser.setMultiSelectionEnabled(false);
-                FileFilter fileFilter =
-                        new FileNameExtensionFilter("Encrypted database file", AppConstants.FILE_EXTENSION);
-                fileChooser.setFileFilter(fileFilter);
+                OpenFileDialog openFileDialog = new OpenFileDialog(application.getMainFrame());
+                int dialogResult = openFileDialog.showDialog();
 
-                int dialogResult = fileChooser.showOpenDialog(application.getMainFrame());
-                if (dialogResult == JFileChooser.APPROVE_OPTION) {
-                    File result = fileChooser.getSelectedFile();
-                    ApplicationData data = FileService.loadFromFile(result);
-
-                    if (data != null) {
-                        applicationModel.setApplicationData(data);
-                        applicationModel.setActiveSection("");
-                        applicationModel.setCurrentFile(result);
-                        applicationModel.refreshAll();
-                    }
+                if (dialogResult == OpenFileDialog.RESULT_OK) {
                     StatusBarService.displayMessage("Load completed");
+                } else if (dialogResult == OpenFileDialog.RESULT_ERROR) {
+                    StatusBarService.displayMessage("Could not load from file");
                 }
+
                 break;
             case SAVE_FILE:
-                FileService.saveApplicationDataToFile();
+                FileService.saveApplicationDataToFile(applicationModel.getMasterKey());
                 break;
             case UNKNOWN:
             default:

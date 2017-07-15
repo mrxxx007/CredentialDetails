@@ -3,21 +3,33 @@ package CredentialDetails.service;
 import CredentialDetails.app.Application;
 import CredentialDetails.data.ApplicationData;
 import CredentialDetails.data.ApplicationModel;
-import CredentialDetails.data.TableRowVo;
 import CredentialDetails.data.TableContentVo;
+import CredentialDetails.data.TableRowVo;
+import CredentialDetails.exception.CryptographyException;
+import CredentialDetails.util.CryptoUtil;
+import org.apache.commons.crypto.stream.CryptoInputStream;
+import org.apache.commons.crypto.stream.CryptoOutputStream;
 
+import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 /**
  * Created by Admin on 25.04.2017.
  */
 public class FileService {
-    public static ApplicationData loadFromFile(File file) {
+    public static ApplicationData loadFromFile(File file, String password) throws IOException, ClassNotFoundException, InvalidClassException, CryptographyException {
+        final String transform = CryptoUtil.AES_TRANSFORMATION;
+        final SecretKeySpec key = CryptoUtil.getAESSecretKey(password);
+        final IvParameterSpec iv = CryptoUtil.getAESParameters(password);
+
         ApplicationData data = null;
-        if (file != null && file.exists()) {
-            try (FileInputStream fileOutputStream = new FileInputStream(file)) {
-                try (ObjectInputStream input = new ObjectInputStream(fileOutputStream)) {
+
+        try (FileInputStream fileInputStream = new FileInputStream(file)) {
+            try (CryptoInputStream cis = new CryptoInputStream(transform, new Properties(), fileInputStream, key, iv)) {
+                try (ObjectInputStream input = new ObjectInputStream(cis)) {
                     data = (ApplicationData) input.readObject();
                 } catch (ClassNotFoundException e) {
                     UserMessageService.displayErrorMessage(e.getMessage());
@@ -26,30 +38,40 @@ public class FileService {
                             "</b>. <hr/>Perhaps it was created by another application or by previous version of this <br/>" +
                             "application which is not compatible with the current one.</html>", "Error: incompatible file");
                 }
-            } catch (IOException e) {
-                UserMessageService.displayErrorMessage(e.getMessage());
+            } catch (Exception e) {
+                UserMessageService.displayWarningMessage("Could not load data because of corrupted file and/or incorrect password.");
             }
-        } else {
-            UserMessageService.displayErrorMessage("Could not load from file: file name is empty", "Error");
+        } catch (IOException e) {
+            UserMessageService.displayErrorMessage(e.getMessage());
         }
 
         return data;
     }
 
-    public static void saveApplicationDataToFile() {
+    public static void saveApplicationDataToFile(String password) {
+        final String transform = CryptoUtil.AES_TRANSFORMATION;
+        final SecretKeySpec key = CryptoUtil.getAESSecretKey(password);
+        final IvParameterSpec iv = CryptoUtil.getAESParameters(password);
+
         ApplicationModel applicationModel = Application.getInstance().getMainForm().getModel();
         ApplicationData applicationData = applicationModel.getApplicationData();
         final File file = applicationModel.getCurrentFile();
 
         try (FileOutputStream fileOutputStream = new FileOutputStream(file)) {
-            try (ObjectOutputStream output = new ObjectOutputStream(fileOutputStream)) {
-                output.writeObject(applicationData);
-                StatusBarService.displayMessage("Saved successfully");
+            try (CryptoOutputStream cos = new CryptoOutputStream(transform, new Properties(), fileOutputStream, key, iv)){
+                try (ObjectOutputStream output = new ObjectOutputStream(cos)) {
+                    output.writeObject(applicationData);
+                    StatusBarService.displayMessage("Saved successfully");
+                }
             }
         } catch (IOException e) {
             UserMessageService.displayErrorMessage(e.getMessage());
             StatusBarService.displayMessage("Could not save to file");
         }
+    }
+
+    private static byte[] getUTF8Bytes(String input) {
+        return input.getBytes(StandardCharsets.UTF_8);
     }
 
     private static ApplicationData getNewTestData() {

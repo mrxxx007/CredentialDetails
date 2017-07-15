@@ -97,8 +97,9 @@ public class NewFileDialog extends JDialog {
             appModel.setApplicationData(new ApplicationData());
             appModel.setCurrentFile(new File(pathAndName));
             appModel.setActiveSection("");
+            appModel.setMasterKey(String.valueOf(passwordField.getPassword()));
 
-            FileService.saveApplicationDataToFile();
+            FileService.saveApplicationDataToFile(appModel.getMasterKey());
 
             dispose();
 
@@ -151,7 +152,9 @@ public class NewFileDialog extends JDialog {
         label5.setText("File location:");
         panel1.add(label5, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_EAST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         pathButton = new JButton();
-        pathButton.setText("...");
+        pathButton.setIcon(new ImageIcon(getClass().getResource("/images/open-file-2.png")));
+        pathButton.setText("");
+        pathButton.setToolTipText("Select folder");
         panel1.add(pathButton, new GridConstraints(1, 2, 1, 1, GridConstraints.ANCHOR_EAST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         pathLabel = new JLabel();
         pathLabel.setText("Label");

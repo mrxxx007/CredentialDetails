@@ -14,6 +14,7 @@ public class ApplicationModel {
 
     private File currentFile;
     private String activeSection = "";
+    private String masterKey = "";
     private ApplicationData applicationData = new ApplicationData();
 
     /**
@@ -54,6 +55,14 @@ public class ApplicationModel {
 
     public void setCurrentFile(File currentFile) {
         this.currentFile = currentFile;
+    }
+
+    public String getMasterKey() {
+        return masterKey;
+    }
+
+    public void setMasterKey(String masterKey) {
+        this.masterKey = masterKey;
     }
 
     public ApplicationData getApplicationData() {
